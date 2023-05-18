@@ -231,15 +231,69 @@ class BST:
 
     def contains(self, value: object) -> bool:
         """
-        TODO: Write your implementation
+        This method returns True if the value is in the tree.
+        Otherwise, it returns False
         """
-        pass
+        n = self._root
+
+        if n is None:
+            return False
+
+        # This code initializes a stack object and pushes
+        # the root node (n) onto the stack to start the traversal.
+        stack = Stack()
+        stack.push(n)
+
+        # This code enters a while loop that
+        # continues until the stack is empty,
+        # indicating that all nodes have been processed.
+        while not stack.is_empty():
+            n = stack.pop()
+
+            if n.value == value:
+                return True
+
+            if n.left:
+                stack.push(n.left)
+            if n.right:
+                stack.push(n.right)
+
+        return False
 
     def inorder_traversal(self) -> Queue:
         """
-        TODO: Write your implementation
+        This method will perform an
+        inorder traversal of the tree and return a
+        Queue object that contains the values of the visited nodes, in the order they were visited.
+        If the tree is empty, the method returns an empty Queue
         """
-        pass
+        traversal = Queue()
+        n = self._root
+
+        if n is None:
+            return traversal
+
+        stack = Stack()
+
+        # Loop that continues until the current node is node
+        # and until the stack is empty
+        while n or not stack.is_empty():
+
+            # Traverses the left most side by pushing each node
+            # unto the stack. Once it reaches the left most node,
+            # it pops a node from the stack,
+            # adds its value to the traversal queue,
+            # and moves to its right child.
+            while n:
+                stack.push(n)
+                n = n.left
+
+            n = stack.pop()
+            traversal.enqueue(n.value)
+
+            n = n.right
+
+        return traversal
 
     def find_min(self) -> object:
         """
