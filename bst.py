@@ -137,13 +137,69 @@ class BST:
         else:
             p.right = node
 
-
-
     def remove(self, value: object) -> bool:
         """
-        TODO: Write your implementation
+        This method removes a value from the tree. The method returns
+        True if the value is removed. Otherwise, it returns False
         """
-        pass
+
+        p = None
+        n = self._root
+
+        # Find the node to remove and its parent
+        while n:
+            if value == n.value:
+                break
+            p = n
+            if value < n.value:
+                n = n.left
+            else:
+                n = n.right
+        else:
+            # Value not found in the tree
+            return False
+
+        if n.left is None and n.right is None:
+            # Case 1: Node to remove has no children
+            if p is None:
+                self._root = None
+            elif p.left is n:
+                p.left = None
+            else:
+                p.right = None
+        elif n.left is None:
+            # Case 2: Node to remove has only right child
+            if p is None:
+                self._root = n.right
+            elif p.left is n:
+                p.left = n.right
+            else:
+                p.right = n.right
+        elif n.right is None:
+            # Case 3: Node to remove has only left child
+            if p is None:
+                self._root = n.left
+            elif p.left is n:
+                p.left = n.left
+            else:
+                p.right = n.left
+        else:
+            # Case 4: Node to remove has both left and right children
+            successor_p = n
+            successor = n.right
+
+            while successor.left:
+                successor_p = successor
+                successor = successor.left
+
+            n.value = successor.value
+
+            if successor_p.left is successor:
+                successor_p.left = successor.right
+            else:
+                successor_p.right = successor.right
+
+        return True
 
     # Consider implementing methods that handle different removal scenarios; #
     # you may find that you're able to use some of them in the AVL.          #
