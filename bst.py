@@ -1,9 +1,10 @@
-# Name:
-# OSU Email:
+# Name: Tyler Renn
+# OSU Email: rennt@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: A03
+# Due Date: 05/02/2023 @ 11:59 PM
+# Description: Add methods to the current BST class to add()
+#               remove() nodes.
 
 
 import random
@@ -107,9 +108,36 @@ class BST:
 
     def add(self, value: object) -> None:
         """
-        TODO: Write your implementation
+        This method adds a new value to the tree
         """
-        pass
+
+        node = BSTNode(value)
+        n = self._root
+        p = None
+
+        # Loop used to Traverse down BST
+        while n is not None:
+            p = n
+
+            # Checks if value being inserted needs to be added
+            # as the left or right child
+            if value < n.value:
+                n = n.left
+            else:
+                n = n.right
+
+        # If BST was initially empty
+        if p is None:
+            p = node
+            self._root = p
+
+        elif value < p.value:
+            p.left = node
+
+        else:
+            p.right = node
+
+
 
     def remove(self, value: object) -> bool:
         """
