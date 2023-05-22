@@ -297,27 +297,54 @@ class BST:
 
     def find_min(self) -> object:
         """
-        TODO: Write your implementation
+        This method returns the lowest value in the tree. If the tree is empty, the method should
+        return None
         """
-        pass
+        n = self._root
+
+        if n is None:
+            return
+
+        p = self._root
+
+        while p.left:
+            p = p.left
+
+        return p.value
 
     def find_max(self) -> object:
         """
-        TODO: Write your implementation
+        This method returns the highest value in the tree
         """
-        pass
+        n = self._root
+
+        if n is None:
+            return
+
+        p = self._root
+
+        while p.right:
+            p = p.right
+
+        return p.value
 
     def is_empty(self) -> bool:
         """
-        TODO: Write your implementation
+        This method returns True if the tree is empty.
         """
-        pass
+        n = self._root
+
+        if n is None:
+            return True
+
+        return False
 
     def make_empty(self) -> None:
         """
         TODO: Write your implementation
         """
-        pass
+
+        self._root = None
 
 
 # ------------------- BASIC TESTING -----------------------------------------
