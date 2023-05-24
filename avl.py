@@ -1,9 +1,10 @@
-# Name:
-# OSU Email:
+# Name: Tyler Renn
+# OSU Email: rennt@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: A04
+# Due Date: 05/22/2023 @ 11:59 PM
+# Description: Implements the add() and remove() methods to an
+#              AVL Tree
 
 
 import random
@@ -101,9 +102,48 @@ class AVL(BST):
 
     def add(self, value: object) -> None:
         """
-        TODO: Write your implementation
+        his method adds a new value to the tree while maintaining its AVL property.
+        Duplicate values are not allowed. If the value is already in the tree,
+        the method should not change the tree.
+        It must be implemented with O(log N) runtime complexity.
         """
-        pass
+
+        if self.contains(value):
+            return  # Value already exists in the tree
+
+        node = AVLNode(value)
+
+        if self._root is None:
+            # If the tree is empty, make the new node the root
+            self._root = node
+        else:
+            # Traverse down the tree to find the appropriate position to insert the new node
+            stack = Stack()
+            stack.push(self._root)
+            parent = None
+
+            while not stack.is_empty():
+                current = stack.pop()
+                parent = current
+
+                if value < current.value:
+                    if current.left:
+                        stack.push(current.left)
+                    else:
+                        current.left = node
+                        break
+                else:
+                    if current.right:
+                        stack.push(current.right)
+                    else:
+                        current.right = node
+                        break
+
+            node.parent = parent
+
+        # Update the heights and rebalance the tree
+        self._update_height(node)
+        self._rebalance(node)
 
     def remove(self, value: object) -> bool:
         """
@@ -111,61 +151,105 @@ class AVL(BST):
         """
         pass
 
-    # Experiment and see if you can use the optional                         #
-    # subtree removal methods defined in the BST here in the AVL.            #
-    # Call normally using self -> self._remove_no_subtrees(parent, node)     #
-    # You need to override the _remove_two_subtrees() method in any case.    #
-    # Remove these comments.                                                 #
-    # Remove these method stubs if you decide not to use them.               #
-    # Change this method in any way you'd like.                              #
-
-    def _remove_two_subtrees(self, remove_parent: AVLNode, remove_node: AVLNode) -> AVLNode:
-        """
-        TODO: Write your implementation
-        """
-        pass
-
-    # It's highly recommended to implement                          #
-    # the following methods for balancing the AVL Tree.             #
-    # Remove these comments.                                        #
-    # Remove these method stubs if you decide not to use them.      #
-    # Change these methods in any way you'd like.                   #
-
     def _balance_factor(self, node: AVLNode) -> int:
         """
-        TODO: Write your implementation
+        Balance Factor
         """
-        pass
+        if node is None:
+            return 0
+        return self._get_height(node.left) - self._get_height(node.right)
 
     def _get_height(self, node: AVLNode) -> int:
         """
-        TODO: Write your implementation
+        Gets the height
         """
-        pass
+        if node is None:
+            return 0
+        return node.height
 
     def _rotate_left(self, node: AVLNode) -> AVLNode:
         """
-        TODO: Write your implementation
+        left rotation
         """
-        pass
+        new_root = node.right
+        node.right = new_root.left
+
+        if new_root.left is not None:
+            new_root.left.parent = node
+
+        new_root.parent = node.parent
+
+        if node.parent is None:
+            self._root = new_root
+        elif node is node.parent.left:
+            node.parent.left = new_root
+        else:
+            node.parent.right = new_root
+
+        new_root.left = node
+        node.parent = new_root
+
+        self._update_height(node)
+        self._update_height(new_root)
 
     def _rotate_right(self, node: AVLNode) -> AVLNode:
         """
-        TODO: Write your implementation
+        Right rotation
         """
-        pass
+        new_root = node.left
+        node.left = new_root.right
+
+        if new_root.right is not None:
+            new_root.right.parent = node
+
+        new_root.parent = node.parent
+
+        if node.parent is None:
+            self._root = new_root
+        elif node is node.parent.right:
+            node.parent.right = new_root
+        else:
+            node.parent.left = new_root
+
+        new_root.right = node
+        node.parent = new_root
+
+        self._update_height(node)
+        self._update_height(new_root)
 
     def _update_height(self, node: AVLNode) -> None:
         """
-        TODO: Write your implementation
+        Updates the height of each node
         """
-        pass
+        while node is not None:
+            left_height = self._get_height(node.left)
+            right_height = self._get_height(node.right)
+
+            if left_height > right_height:
+                node.height = 1 + left_height
+            else:
+                node.height = 1 + right_height
+
+            node = node.parent
 
     def _rebalance(self, node: AVLNode) -> None:
         """
-        TODO: Write your implementation
+        Rebalances the tree
         """
-        pass
+
+        while node:
+            self._update_height(node)
+
+            if self._balance_factor(node) > 1:
+                if self._balance_factor(node.left) < 0:
+                    self._rotate_left(node.left)
+                self._rotate_right(node)
+            elif self._balance_factor(node) < -1:
+                if self._balance_factor(node.right) > 0:
+                    self._rotate_right(node.right)
+                self._rotate_left(node)
+
+            node = node.parent
 
 # ------------------- BASIC TESTING -----------------------------------------
 
